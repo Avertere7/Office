@@ -206,6 +206,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManagementModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OfficeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -278,10 +279,17 @@
     <Content Include="Views\Office\Edit.cshtml" />
     <Content Include="Views\Office\Index.cshtml" />
     <Content Include="Views\Account\LoginSuccessfull.cshtml" />
+    <Content Include="Views\Management\DeleteUser.cshtml" />
+    <Content Include="Views\Management\UserList.cshtml" />
+    <Content Include="Views\Management\LayoutManagement.cshtml" />
+    <Content Include="Views\Management\RoleList.cshtml" />
+    <Content Include="Views\Management\CreateRole.cshtml" />
+    <Content Include="Views\Management\DeleteRole.cshtml" />
+    <Content Include="Views\Management\EditRole.cshtml" />
+    <Content Include="Views\Management\EditUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Management\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

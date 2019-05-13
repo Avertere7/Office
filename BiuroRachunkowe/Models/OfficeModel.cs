@@ -160,6 +160,7 @@ namespace BiuroRachunkowe.Models
 				.Property(e => e.DUTY_VALUE)
 				.HasPrecision(14, 2);
 		}
+
 	}
 	[Table("InvoiceHeader")]
 	public partial class InvoiceHeader
