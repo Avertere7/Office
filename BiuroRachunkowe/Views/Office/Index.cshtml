@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BiuroRachunkowe.Models.InvoiceHeader>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Voucher)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Currency)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExchangeRate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TransportCost_)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdditionalCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Supplier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShipFrom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TypeOfTranosport)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Voucher)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Currency)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExchangeRate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransportCost_)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdditionalCost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Supplier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShipFrom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TypeOfTranosport)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

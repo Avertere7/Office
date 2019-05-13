@@ -17,18 +17,32 @@ namespace BiuroRachunkowe.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+		private ApplicationRoleManager _roleManager;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager,ApplicationRoleManager roleManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+			RoleManager = roleManager;
         }
 
-        public ApplicationSignInManager SignInManager
+		public ApplicationRoleManager RoleManager
+		{
+			get
+			{
+				return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+			}
+			private set
+			{
+				_roleManager = value;
+			}
+		}
+
+		public ApplicationSignInManager SignInManager
         {
             get
             {
@@ -55,9 +69,8 @@ namespace BiuroRachunkowe.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
@@ -66,7 +79,7 @@ namespace BiuroRachunkowe.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -79,11 +92,10 @@ namespace BiuroRachunkowe.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+					return RedirectToAction("LoginSuccessfull");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Nieprawidłowa próba logowania.");
@@ -91,9 +103,20 @@ namespace BiuroRachunkowe.Controllers
             }
         }
 
-        //
-        // GET: /Account/VerifyCode
-        [AllowAnonymous]
+
+		public ActionResult LoginSuccessfull()
+		{
+			if (User.Identity.IsAuthenticated)
+			{
+				return View();
+			}
+			else
+				return RedirectToAction("Login", "Account");
+		}
+
+		//
+		// GET: /Account/VerifyCode
+		[AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
             // Wymagaj, aby użytkownik zalogował się już za pomocą nazwy użytkownika/hasła lub logowania zewnętrznego
@@ -155,6 +178,7 @@ namespace BiuroRachunkowe.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+					result = await UserManager.AddToRoleAsync(user.Id, "Admin");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // Aby uzyskać więcej informacji o sposobie włączania potwierdzania konta i resetowaniu hasła, odwiedź stronę https://go.microsoft.com/fwlink/?LinkID=320771
@@ -163,7 +187,7 @@ namespace BiuroRachunkowe.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Potwierdź konto", "Potwierdź konto, klikając <a href=\"" + callbackUrl + "\">tutaj</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("LoginSuccessfull", "Account");
                 }
                 AddErrors(result);
             }
@@ -202,7 +226,7 @@ namespace BiuroRachunkowe.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.Email.ToLower().Trim());
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Nie ujawniaj informacji o tym, że użytkownik nie istnieje lub nie został potwierdzony
@@ -392,7 +416,7 @@ namespace BiuroRachunkowe.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

@@ -13,7 +13,10 @@ namespace BiuroRachunkowe.Controllers
     [Authorize]
     public class ManageController : Controller
     {
-        private ApplicationSignInManager _signInManager;
+
+		private ApplicationDbContext Accountdb = new ApplicationDbContext();
+
+		private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
         public ManageController()
