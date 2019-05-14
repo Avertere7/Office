@@ -332,6 +332,9 @@
     <Content Include="Views\Office\InvoiceList.cshtml" />
     <Content Include="Views\Office\ExportAllInvoice.cshtml" />
     <Content Include="Views\Office\ImportInvoicePos.cshtml" />
+    <Content Include="Views\Office\InvoicePositionCreate.cshtml" />
+    <Content Include="Views\Office\InvoicePositionEdit.cshtml" />
+    <Content Include="Views\Office\InvoicePositionDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

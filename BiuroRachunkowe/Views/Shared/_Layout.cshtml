@@ -26,11 +26,10 @@
                 @Html.ActionLink("Biuro Rachunkowe", "Login", "Account", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                @*<ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Strona główna", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Informacje", "About", "Home")</li>
-                    <li>@Html.ActionLink("Kontakt", "Contact", "Home")</li>
-                </ul>*@
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Faktury", "InvoiceList", "Office")</li>
+                    <li>@Html.ActionLink("SADy", "SADList", "Transport")</li>
+                </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

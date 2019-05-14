@@ -374,6 +374,94 @@ namespace BiuroRachunkowe.Models
 		[NotMapped]
 		public decimal? value { get; set; } = 0;
 	}
+
+	public class InvoicePositionViewModel
+	{
+		public long InvoiceId { get; set; }
+
+		public long Id { get; set; }
+
+		[Display(Name = "Numer Pozycji")]
+		public int? PositionNumber { get; set; }
+
+		[Required]
+		[StringLength(18)]
+		[Display(Name = "Numer Komponentu")]
+		public string Itemnumber { get; set; }
+		public IEnumerable<SelectListItem> ItemnumberDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="123",Text="Œrubka" },
+					new SelectListItem {Value="343",Text="Uk³ad Scalony" },
+					new SelectListItem {Value="536",Text="Drut" },
+				};
+			}
+		}
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Iloœæ")]
+		public decimal Quantity { get; set; }
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Cena")]
+		public decimal Price { get; set; }
+
+		[Required]
+		[StringLength(4)]
+		[Display(Name = "Jednostka Miary")]
+		public string UnitOfMeasure { get; set; }
+		public IEnumerable<SelectListItem> UnitOfMeasureDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="szt",Text="Sztuka" },
+					new SelectListItem {Value="m",Text="Metr" },
+					new SelectListItem {Value="kg",Text="Kilogram" },
+				};
+			}
+		}
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Waga")]
+		public decimal Weight { get; set; }
+
+		[StringLength(13)]
+		[Display(Name = "Kod HS")]
+		public string HSCode { get; set; }
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Dodatkowe Koszty")]
+		public decimal? AdditionalCost { get; set; }
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Koszty Transportu")]
+		public decimal? TransportsCost { get; set; }
+
+		[StringLength(50)]
+		public string CountryOfOrigin { get; set; }
+		public IEnumerable<SelectListItem> CountryOfOriginDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="PL",Text="Polska" },
+					new SelectListItem {Value="DE",Text="Niemcy" },
+					new SelectListItem {Value="US",Text="USA" },
+				};
+			}
+		}
+
+		[NotMapped]
+		public decimal? value { get; set; } = 0;
+	}
+
+
 	[Table("SAD")]
 	public partial class SAD
 	{
