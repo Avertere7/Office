@@ -158,25 +158,34 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Office/Details/5
 		public ActionResult InvoiceDetails(long? id)
 		{
-		
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
+				if (invoiceHeader == null)
+				{
+					return HttpNotFound();
+				}
+				return View(invoiceHeader);
 			}
-			InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
-			if (invoiceHeader == null)
-			{
-				return HttpNotFound();
-			}
-			return View(invoiceHeader);
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		// GET: Office/Create
 		public ActionResult InvoiceCreate()
 		{
-			InvoiceHeaderViewModel IH = new InvoiceHeaderViewModel();
-			IH.InvoiceDate = DateTime.Now;
-			return View(IH);
+			if (User.Identity.IsAuthenticated)
+			{
+				InvoiceHeaderViewModel IH = new InvoiceHeaderViewModel();
+				IH.InvoiceDate = DateTime.Now;
+				return View(IH);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		// POST: Office/Create
@@ -200,17 +209,22 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Office/Edit/5
 		public ActionResult InvoiceEdit(long? id)
 		{
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
+				InvoiceHeaderViewModel model = FromModelToViewHeader(invoiceHeader);
+				if (invoiceHeader == null)
+				{
+					return HttpNotFound();
+				}
+				return View(model);
 			}
-			InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
-			InvoiceHeaderViewModel model = FromModelToViewHeader(invoiceHeader);
-			if (invoiceHeader == null)
-			{
-				return HttpNotFound();
-			}
-			return View(model);
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		// POST: Office/Edit/5
@@ -252,21 +266,32 @@ namespace BiuroRachunkowe.Controllers
 		}
 		public ActionResult ExportInvoice(long id)
 		{
-
-			var invH = db.InvoiceHeader.Find(id);
-			string csv = "InvNumber;InvDate;Voucher;Currency;ExRate;InvoiceValue;Supplier;PositionNumber;PositionItemNumber;PositionHSCode;PositionWeight;PositionPrice;\n" + InvoiceToString(invH);
-			return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv",
-				"Invoice" + invH.InvoiceNumber + ".csv");
+			if (User.Identity.IsAuthenticated)
+			{
+				var invH = db.InvoiceHeader.Find(id);
+				string csv = "InvNumber;InvDate;Voucher;Currency;ExRate;InvoiceValue;Supplier;PositionNumber;PositionItemNumber;PositionHSCode;PositionWeight;PositionPrice;\n" + InvoiceToString(invH);
+				return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv",
+					"Invoice" + invH.InvoiceNumber + ".csv");
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		public ActionResult ExportAllInvoice()
 		{
-			ViewBag.Date = DateTime.Now.ToString("yyyy-MM-dd");
-			return View();
+			if (User.Identity.IsAuthenticated)
+			{
+				ViewBag.Date = DateTime.Now.ToString("yyyy-MM-dd");
+				return View();
+			}
+			else
+				return RedirectToAction("Login", "Account");
+
 		}
 		[HttpPost]
 		public ActionResult ExportAllInvoice(importInvoiceDate model)
 		{
+
 			if (model.from > model.to)
 			{
 				ModelState.AddModelError("", "Data od nie może byc większa od daty do");
@@ -305,46 +330,57 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult ImportInvoicePos(long? id, long? posid)
 		{
-			if (id == 0 || id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				if (Session["PositionInvoice"] != null)
-					id = Convert.ToInt32(Session["PositionInvoice"]);
+
+				if (id == 0 || id == null)
+				{
+					if (Session["PositionInvoice"] != null)
+						id = Convert.ToInt32(Session["PositionInvoice"]);
+				}
+
+				ViewBag.Details = db.InvoiceHeader.Find(id);
+
+
+				List<InvoicePosition> all = db.InvoicePosition.Where(x => x.InvoiceId == id).ToList();
+
+
+				if (posid.HasValue && posid != 0)
+				{
+					Session["InvoicePositionSelected"] = posid;
+
+				}
+				else if (all.Any())
+					Session["InvoicePositionSelected"] = all.OrderBy(x => x.PositionNumber).First().Id;
+
+
+
+
+
+				return View(all);
 			}
-
-			ViewBag.Details = db.InvoiceHeader.Find(id);
-
-
-			List<InvoicePosition> all = db.InvoicePosition.Where(x => x.InvoiceId == id).ToList();
-
-
-			if (posid.HasValue && posid != 0)
-			{
-				Session["InvoicePositionSelected"] = posid;
-
-			}
-			else if (all.Any())
-				Session["InvoicePositionSelected"] = all.OrderBy(x => x.PositionNumber).First().Id;
-
-
-
-
-
-			return View(all);
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		public ActionResult InvoicePositionCreate(long id)
 		{
-			InvoicePositionViewModel model = new InvoicePositionViewModel();
-			model.InvoiceId = id;
-			if (db.InvoicePosition.Any(x => x.InvoiceId == model.InvoiceId))
+			if (User.Identity.IsAuthenticated)
 			{
-				int maxpos = db.InvoicePosition.Where(x => x.InvoiceId == model.InvoiceId).Max(x => x.PositionNumber.HasValue ? x.PositionNumber.Value : 0);
-				model.PositionNumber = maxpos + 1;
+				InvoicePositionViewModel model = new InvoicePositionViewModel();
+				model.InvoiceId = id;
+				if (db.InvoicePosition.Any(x => x.InvoiceId == model.InvoiceId))
+				{
+					int maxpos = db.InvoicePosition.Where(x => x.InvoiceId == model.InvoiceId).Max(x => x.PositionNumber.HasValue ? x.PositionNumber.Value : 0);
+					model.PositionNumber = maxpos + 1;
+				}
+				else
+					model.PositionNumber = 1;
+
+				return View(model);
 			}
 			else
-				model.PositionNumber = 1;
-
-			return View(model);
+				return RedirectToAction("Login", "Account");
 		}
 
 		[HttpPost]
@@ -367,17 +403,22 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult InvoicePositionEdit(long? id)
 		{
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				InvoicePosition invoicePosition = db.InvoicePosition.FirstOrDefault(x => x.Id == id);
+				InvoicePositionViewModel model = FromModelToViewPosition(invoicePosition);
+				if (invoicePosition == null)
+				{
+					return HttpNotFound();
+				}
+				return View(model);
 			}
-			InvoicePosition invoicePosition = db.InvoicePosition.FirstOrDefault(x => x.Id == id);
-			InvoicePositionViewModel model = FromModelToViewPosition(invoicePosition);
-			if (invoicePosition == null)
-			{
-				return HttpNotFound();
-			}
-			return View(model);
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 
@@ -397,16 +438,21 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult InvoicePositionDetails(long? id)
 		{
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				InvoicePosition invoicePosition = db.InvoicePosition.FirstOrDefault(x => x.Id == id);
+				if (invoicePosition == null)
+				{
+					return HttpNotFound();
+				}
+				return View(invoicePosition);
 			}
-			InvoicePosition invoicePosition = db.InvoicePosition.FirstOrDefault(x => x.Id == id);
-			if (invoicePosition == null)
-			{
-				return HttpNotFound();
-			}
-			return View(invoicePosition);
+			else
+				return RedirectToAction("Login", "Account");
 		}
 		[HttpPost, ActionName("InvoicePositionDelete")]
 		[ValidateAntiForgeryToken]
