@@ -5,6 +5,8 @@ namespace BiuroRachunkowe.Models
 	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
+	using System.Web.Mvc;
+	using System.Collections.Generic;
 
 	public partial class OfficeModel : DbContext
 	{
@@ -25,10 +27,7 @@ namespace BiuroRachunkowe.Models
 				.Property(e => e.InvoiceNumber)
 				.IsUnicode(false);
 
-			modelBuilder.Entity<InvoiceHeader>()
-				.Property(e => e.InvoiceStatus)
-				.IsFixedLength()
-				.IsUnicode(false);
+
 
 			modelBuilder.Entity<InvoiceHeader>()
 				.Property(e => e.Voucher)
@@ -51,7 +50,7 @@ namespace BiuroRachunkowe.Models
 				.HasPrecision(14, 2);
 
 			modelBuilder.Entity<InvoiceHeader>()
-				.Property(e => e.TransportCost_)
+				.Property(e => e.TransportCost)
 				.HasPrecision(14, 2);
 
 			modelBuilder.Entity<InvoiceHeader>()
@@ -169,45 +168,161 @@ namespace BiuroRachunkowe.Models
 
 		[Required]
 		[StringLength(50)]
+		[Display(Name ="Numer Faktury")]
 		public string InvoiceNumber { get; set; }
 
 		[Column(TypeName = "date")]
+		[Display(Name = "Data Faktury")]
 		public DateTime InvoiceDate { get; set; }
 
-		[StringLength(1)]
-		public string InvoiceStatus { get; set; }
+	
 
 		[StringLength(30)]
+		[Display(Name = "Voucher")]
 		public string Voucher { get; set; }
 
 		[StringLength(255)]
+		[Display(Name = "Uwagi")]
 		public string Remarks { get; set; }
 
 		[Required]
 		[StringLength(3)]
+		[Display(Name = "Waluta")]
 		public string Currency { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Kurs Waluty")]
 		public decimal ExchangeRate { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Wartosc Faktury")]
 		public decimal InvoiceValue { get; set; }
 
 		[Column("TransportCost ", TypeName = "numeric")]
-		public decimal? TransportCost_ { get; set; }
+		[Display(Name = "Koszty Transportu")]
+		public decimal? TransportCost { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Dodatkowe Koszty")]
 		public decimal? AdditionalCost { get; set; }
 
 		[Required]
 		[StringLength(11)]
+		[Display(Name = "Dostawca")]
 		public string Supplier { get; set; }
 
 		[StringLength(11)]
+		[Display(Name = "Pochodzenie")]
 		public string ShipFrom { get; set; }
 
 		[StringLength(15)]
+		[Display(Name = "Typ Transportu")]
 		public string TypeOfTranosport { get; set; }
+	}
+	public class InvoiceHeaderViewModel
+	{
+		public long Id { get; set; }
+
+		[Required]
+		[StringLength(50)]
+		[Display(Name = "Numer Faktury")]
+		public string InvoiceNumber { get; set; }
+
+		[Column(TypeName = "date")]
+		[Display(Name = "Data Faktury")]
+		public DateTime InvoiceDate { get; set; }
+
+		
+
+		[StringLength(30)]
+		[Display(Name = "Voucher")]
+		public string Voucher { get; set; }
+
+		[StringLength(255)]
+		[Display(Name = "Uwagi")]
+		public string Remarks { get; set; }
+
+		[Required]
+		[StringLength(3)]
+		[Display(Name = "Waluta")]
+		public string Currency { get; set; }
+		public IEnumerable<SelectListItem> CurrencyDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="PLN",Text="Z£" },
+					new SelectListItem {Value="USD",Text="USD" },
+					new SelectListItem {Value="EUR",Text="EUR" },
+				};
+			}
+		}
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Kurs Waluty")]
+		public decimal ExchangeRate { get; set; }
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Wartosc Faktury")]
+		public decimal InvoiceValue { get; set; }
+
+		[Column("TransportCost ", TypeName = "numeric")]
+		[Display(Name = "Koszty Transportu")]
+		public decimal? TransportCost { get; set; }
+
+		[Column(TypeName = "numeric")]
+		[Display(Name = "Dodatkowe Koszty")]
+		public decimal? AdditionalCost { get; set; }
+
+		[Required]
+		[StringLength(11)]
+		[Display(Name = "Dostawca")]
+		public string Supplier { get; set; }
+		public IEnumerable<SelectListItem> SupplierDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="DHL",Text="DHL" },
+					new SelectListItem {Value="BC",Text="BC Company" },
+				};
+			}
+		}
+
+		[StringLength(11)]
+		[Display(Name = "Pochodzenie")]
+		public string ShipFrom { get; set; }
+		public IEnumerable<SelectListItem> ShipFromDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="PL",Text="Polska" },
+					new SelectListItem {Value="DE",Text="Niemcy" },
+					new SelectListItem {Value="US",Text="USA" },
+				};
+			}
+		}
+
+		[StringLength(15)]
+		[Display(Name = "Typ Transportu")]
+		public string TypeOfTranosport { get; set; }
+		public IEnumerable<SelectListItem> TypeOfTransportDDL
+		{
+			get
+			{
+				return new[]
+				{
+					new SelectListItem {Value="Pociag",Text="Poci¹g" },
+					new SelectListItem {Value="Samolot",Text="Samolot" },
+					new SelectListItem {Value="Tir",Text="Tir" },
+					new SelectListItem {Value="Statek",Text="Statek" },
+				};
+			}
+		}
 	}
 	[Table("InvoicePosition")]
 	public partial class InvoicePosition
@@ -216,36 +331,48 @@ namespace BiuroRachunkowe.Models
 
 		public long Id { get; set; }
 
+		[Display(Name = "Numer Pozycji")]
 		public int? PositionNumber { get; set; }
 
 		[Required]
 		[StringLength(18)]
+		[Display(Name = "Numer Komponentu")]
 		public string Itemnumber { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Iloœæ")]
 		public decimal Quantity { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Cena")]
 		public decimal Price { get; set; }
 
 		[Required]
 		[StringLength(4)]
+		[Display(Name = "Jednostka Miary")]
 		public string UnitOfMeasure { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Waga")]
 		public decimal Weight { get; set; }
 
 		[StringLength(13)]
+		[Display(Name = "Kod HS")]
 		public string HSCode { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Dodatkowe Koszty")]
 		public decimal? AdditionalCost { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Koszty Transportu")]
 		public decimal? TransportsCost { get; set; }
 
 		[StringLength(50)]
 		public string CountryOfOrigin { get; set; }
+
+		[NotMapped]
+		public decimal? value { get; set; } = 0;
 	}
 	[Table("SAD")]
 	public partial class SAD
@@ -254,28 +381,36 @@ namespace BiuroRachunkowe.Models
 
 		[Required]
 		[StringLength(25)]
+		[Display(Name = "Numer SADu")]
 		public string SadNumber { get; set; }
 
 		[Column(TypeName = "date")]
+		[Display(Name = "Data SADu")]
 		public DateTime SadDate { get; set; }
 
 		[Required]
 		[StringLength(3)]
+		[Display(Name = "Waluta")]
 		public string Currency { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Kurs")]
 		public decimal ExchangeRate { get; set; }
 
 		[StringLength(1)]
+		[Display(Name = "Status")]
 		public string SadStatus { get; set; }
 
 		[StringLength(1)]
+		[Display(Name = "Zap³acono?")]
 		public string Paid { get; set; }
 
 		[Column(TypeName = "date")]
+		[Display(Name = "Data zap³aty")]
 		public DateTime? PaidDate { get; set; }
 
 		[StringLength(255)]
+		[Display(Name = "Uwagi")]
 		public string Remarks { get; set; }
 	}
 	public partial class SAD_Invoice
@@ -313,20 +448,35 @@ namespace BiuroRachunkowe.Models
 		public long Id { get; set; }
 
 		[Required]
+		[Display(Name = "Kod HS")]
 		[StringLength(13)]
 		public string HSCode { get; set; }
 
 		[Required]
 		[StringLength(3)]
+		[Display(Name = "Kraj Pochodzenia")]
 		public string CountryOfOrigin { get; set; }
 
 		[Column(TypeName = "numeric")]
+		[Display(Name = "Stawka")]
 		public decimal Rate { get; set; }
 
+		[Display(Name = "Wartoœæ pozycji")]
 		[Column(TypeName = "numeric")]
 		public decimal? PositionValue { get; set; }
 
+		[Display(Name = "Wartoœæ C³a")]
 		[Column(TypeName = "numeric")]
 		public decimal? DutyValue { get; set; }
+	}
+
+	public class importInvoiceDate
+	{
+		[Display(Name = " Date From")]
+		public DateTime from { get; set; }
+
+		[Display(Name = "Date To")]
+		public DateTime to { get; set; }
+
 	}
 }

@@ -21,32 +21,42 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Management
 		public ActionResult UserList()
         {
-			var uM = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-
-			List<UserListViewModel> model = new List<UserListViewModel>();
-			foreach (var user in db.AspNetUsers.ToList())
+			if (User.Identity.IsAuthenticated)
 			{
-				UserListViewModel userView = new UserListViewModel();
-				
-				userView.Id = user.Id;
-				userView.Login = user.UserName;
-				List<String> listRole = uM.GetRoles(user.Id).ToList();
-				userView.Role =string.Join(",",listRole);
-				model.Add(userView);
-			}
+				var uM = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-			return View(model);
+				List<UserListViewModel> model = new List<UserListViewModel>();
+				foreach (var user in db.AspNetUsers.ToList())
+				{
+					UserListViewModel userView = new UserListViewModel();
+
+					userView.Id = user.Id;
+					userView.Login = user.UserName;
+					List<String> listRole = uM.GetRoles(user.Id).ToList();
+					userView.Role = string.Join(",", listRole);
+					model.Add(userView);
+				}
+
+				return View(model);
+			}
+			else
+				return RedirectToAction("Login","Account");
         }
 		public ActionResult EditUser(string id)
 		{
-			UserEditViewModel model = new UserEditViewModel();
-			var uM = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+			if (User.Identity.IsAuthenticated)
+			{
+				UserEditViewModel model = new UserEditViewModel();
+				var uM = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
-			ViewBag.RoleId = new SelectList(db.AspNetRoles, "Name", "Name");
-			model.roles =uM.GetRoles(id).ToList();
-			model.Id = id;
-			model.UserName = db.AspNetUsers.FirstOrDefault(x => x.Id == id).UserName;
-			return View(model);
+				ViewBag.RoleId = new SelectList(db.AspNetRoles, "Name", "Name");
+				model.roles = uM.GetRoles(id).ToList();
+				model.Id = id;
+				model.UserName = db.AspNetUsers.FirstOrDefault(x => x.Id == id).UserName;
+				return View(model);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
@@ -95,25 +105,32 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Management/Delete/5
 		public ActionResult DeleteUser(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            AspNetUsers aspNetUsers = db.AspNetUsers.Find(id);
-            if (aspNetUsers == null)
-            {
-                return HttpNotFound();
-            }
-            return View(aspNetUsers);
-        }
+			if (User.Identity.IsAuthenticated)
+			{
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				AspNetUsers aspNetUsers = db.AspNetUsers.Find(id);
+				if (aspNetUsers == null)
+				{
+					return HttpNotFound();
+				}
+				return View(aspNetUsers);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 
-        // POST: Management/Delete/5
-        [HttpPost, ActionName("Delete")]
+		}
+
+		// POST: Management/Delete/5
+		[HttpPost, ActionName("Delete")]
 		[Authorize(Roles = "Admin")]
 		[ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
             AspNetUsers aspNetUsers = db.AspNetUsers.Find(id);
+
 			foreach (var role in db.AspNetUserRoles.Where(x => x.UserId == id))
 				db.AspNetUserRoles.Remove(role);
             db.AspNetUsers.Remove(aspNetUsers);
@@ -123,13 +140,25 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult RoleList()
 		{
-			return View(db.AspNetRoles.OrderBy(x=>x.Id).ToList());
+			if (User.Identity.IsAuthenticated)
+			{
+				return View(db.AspNetRoles.OrderBy(x => x.Id).ToList());
+			}
+			else
+				return RedirectToAction("Login", "Account");
+
 		}
 
 		// GET: AspNetRoles/Create
 		public ActionResult CreateRole()
 		{
-			return View();
+			if (User.Identity.IsAuthenticated)
+			{
+				return View();
+			}
+			else
+				return RedirectToAction("Login", "Account");
+
 		}
 
 		// POST: AspNetRoles/Create
@@ -155,16 +184,22 @@ namespace BiuroRachunkowe.Controllers
 		// GET: AspNetRoles/Edit/5
 		public ActionResult EditRole(string id)
 		{
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				AspNetRoles aspNetRoles = db.AspNetRoles.Find(id);
+				if (aspNetRoles == null)
+				{
+					return HttpNotFound();
+				}
+				return View(aspNetRoles);
 			}
-			AspNetRoles aspNetRoles = db.AspNetRoles.Find(id);
-			if (aspNetRoles == null)
-			{
-				return HttpNotFound();
-			}
-			return View(aspNetRoles);
+			else
+				return RedirectToAction("Login", "Account");
+
 		}
 
 		// POST: AspNetRoles/Edit/5
@@ -187,16 +222,22 @@ namespace BiuroRachunkowe.Controllers
 		// GET: AspNetRoles/Delete/5
 		public ActionResult DeleteRole(string id)
 		{
-			if (id == null)
+			if (User.Identity.IsAuthenticated)
 			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				AspNetRoles aspNetRoles = db.AspNetRoles.Find(id);
+				if (aspNetRoles == null)
+				{
+					return HttpNotFound();
+				}
+				return View(aspNetRoles);
 			}
-			AspNetRoles aspNetRoles = db.AspNetRoles.Find(id);
-			if (aspNetRoles == null)
-			{
-				return HttpNotFound();
-			}
-			return View(aspNetRoles);
+			else
+				return RedirectToAction("Login", "Account");
+
 		}
 
 		// POST: AspNetRoles/Delete/5
