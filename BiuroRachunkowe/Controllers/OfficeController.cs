@@ -164,7 +164,7 @@ namespace BiuroRachunkowe.Controllers
 				{
 					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				}
-				InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
+				InvoiceHeader invoiceHeader = (from headers in db.InvoiceHeader where headers.Id == id select headers).First();// db.InvoiceHeader.Find(id);
 				if (invoiceHeader == null)
 				{
 					return HttpNotFound();

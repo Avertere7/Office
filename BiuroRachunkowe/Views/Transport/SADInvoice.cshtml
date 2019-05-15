@@ -1,0 +1,274 @@
+﻿
+@{
+	ViewBag.Title = "SADInvoice";
+}
+
+<h2>SADInvoice</h2>
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<div class="row" style="padding-left:0px">
+
+
+	<div style="float:left;margin-left:5%;width:250px">
+		<h2>SAD Importowy</h2>
+	</div>
+	<div style="float:left; margin-left:28%" id="menuButtons">
+
+		@Html.Partial("~/Views/Transport/_ImportSADMenu.cshtml")
+
+
+	</div>
+
+	<div style="clear:both"></div>
+	<div id="main1" style="padding-left:20px;">
+		@using (Html.BeginForm("SADList", "Transport", FormMethod.Get))
+		{
+			<div>
+				@Html.Raw(TempData["msg"])
+
+				<text><b>Wyszukaj:</b></text>
+				@if (Session["SearchSAD"] != null)
+				{
+					@Html.TextBox("SearchString", Session["SearchSADIS"].ToString(), new { @class = "form-control", @style = "width:150px;display:inline-block", onchange = "this.form.submit();" })
+				}
+				else
+				{
+					@Html.TextBox("SearchString", null, new { @class = "form-control", @style = "width:150px;display:inline-block", onchange = "this.form.submit();" })
+				}
+
+			</div>
+
+
+			<div style="float:left;margin-top:72px;width:413px">
+
+
+				<table class="table" id="table">
+					<tr>
+						<td width="50">
+							@Html.ActionLink("ID", "SADList", new { sort = ViewBag.idd, id = ViewBag.id })
+						</td>
+						<td width="200">
+							@Html.ActionLink("Number", "SADList", new { sort = ViewBag.nr, id = ViewBag.id })
+						</td>
+						<td width="100">
+							@Html.ActionLink("SAD Date", "SADList", new { sort = ViewBag.date, id = ViewBag.id })
+						</td>
+
+
+					</tr>
+
+
+
+					@foreach (var item in Model)
+					{
+						string selected = "";
+						if (item.Id == Convert.ToInt32(Session["SelectedIdIS"]))
+						{
+							selected = "selected";
+						}
+						<tr class="@selected" onclick="location.href='@(Url.Action("SADList", "Transport", new { id = item.Id}))'" onmouseover="ChangeBackgroundColor(this)" onmouseout="RestoreBackgroundColor(this)" style="cursor:pointer">
+
+
+							<td>
+								@Html.DisplayFor(modelItem => item.Id)
+							</td>
+							<td>
+								@Html.SADNumberToFormat(item.SadNumber)
+							</td>
+							<td>
+								@{
+									string x = item.SadDate.ToString("yyyy-MM-dd");
+								}
+								@x
+							</td>
+
+						</tr>
+
+
+
+
+					}
+				</table>
+			</div>
+			<div style="float:left;margin-left:10px;margin-top:72px">
+
+
+				@if (ViewBag.Details == null)
+				{
+
+
+
+
+					@Html.ActionLink("Stwórz", "SADCreate", null, new { @class = "btn btn-default ", @style = "margin-top:9px;margin-left:12px;width:120px" })<br />
+
+					@Html.ActionLink("Edytuj", "SADCreate", null, new { @class = "btn btn-default ", onclick = "javascript:return false", @style = "margin-top:9px;margin-left:12px;width:120px", @disabled = "disabled" })<br />
+					@Html.ActionLink("Usuń", "SADCreate", null, new { @class = "btn btn-default ", onclick = "javascript:return false", @style = "margin-top:9px;margin-left:12px;width:120px", @disabled = "disabled" })<br />
+
+
+
+				}
+
+
+
+
+			</div>
+
+		<div style="float:left;padding-left:5%;padding-bottom:15px">
+			@if (ViewBag.Message != null)
+			{
+				<div class="text-danger">
+					@ViewBag.Message
+				</div>
+			}
+
+			<h2>Faktury nie przydzielone:</h2>
+			<div class="form-group" style="max-width:400px;">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+					<input type="text" id="Search" placeholder="Wyszukaj" class="form-control" />
+				</div>
+
+			</div>
+
+			@using (Html.BeginForm("AddInvoice", "ImportSad", FormMethod.Post))
+			{
+
+				<div id="divTable2" style="width:900px;height:200px;overflow:auto">
+
+
+					<table class="table rule_event_table" id="table2">
+						@if (ViewBag.Details != null)
+						{
+
+
+
+							<thead>
+								<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>EUR Nr.</td><td>Wartość</td><td>Voucher</td><td>Typ</td><td></td></tr>
+							</thead>
+							<tbody>
+								@foreach (var item in (ViewBag.Details as List<BiuroRachunkowe.Models.InvoiceHeader>))
+								{
+
+
+								<tr class="Search" style="cursor:pointer" onmouseover="ChangeBackgroundColor(this)" onmouseout="RestoreBackgroundColor(this)">
+									<td>@item.Id</td>
+									<td>@item.InvoiceNumber</td>
+									<td>@item.Currency</td>
+
+									<td>@Html.DateToFormat(item.InvoiceDate)</td>
+									<td>@item.InvoiceValue</td>
+									<td>@item.Voucher</td>
+									<td>@item.ShipFrom</td>
+									<td>@item.Supplier</td>
+									<td>
+										@if (Session["optionSADIS"].ToString() == "G")
+										{
+											<input type="checkbox" name="ids" value="@item.Id" disabled />
+										}
+										else
+										{
+											<input type="checkbox" name="ids" value="@item.Id" onchange="highlight(this)" />
+										}
+									</td>
+								</tr>
+
+
+
+								}
+							</tbody>
+
+
+
+						}
+
+					</table>
+				</div>
+				if (Session["Read"].ToString() == "T")
+				{
+					if (ViewBag.Details != null)
+					{
+						if (Session["optionSADIS"].ToString() != "G")
+						{
+
+							<input type="submit" value="Dodaj Fakturę" class="btn btn-default" />
+						}
+					}
+				}
+			}
+			@using (Html.BeginForm("DeleteInvoice", "ImportSad", FormMethod.Post))
+			{
+				<h2>Faktury przydzielone:</h2>
+				<div id="divTable3" style="width:900px;height:200px;overflow:auto">
+					@{decimal all = 0;
+					}
+					<table class="table rule_event_table " id="table3">
+
+						@if (ViewBag.Details2 != null)
+						{
+
+							<thead>
+								<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>EUR Nr.</td><td>Wartość</td><td>Voucher</td><td>Typ</td><td></td></tr>
+							</thead>
+							<tbody>
+								@foreach (var item in (ViewBag.Details2 as List<BiuroRachunkowe.Models.InvoiceHeader>))
+								{
+
+
+									<tr style="cursor:pointer" onmouseover="ChangeBackgroundColor(this)" onmouseout="RestoreBackgroundColor(this)">
+										<td>@item.Id</td>
+										<td>@item.InvoiceNumber</td>
+										<td>@item.Currency</td>
+										
+										<td>@Html.DateToFormat(item.InvoiceDate)</td>
+										<td>@item.InvoiceValue</td>
+										<td>@item.Voucher</td>
+										<td>@item.ShipFrom</td>
+										<td>@item.Supplier</td>
+										<td>
+											@if (Session["optionSADIS"].ToString() == "G")
+											{
+												<input type="checkbox" name="ids" value="@item.Id" disabled />
+											}
+											else
+											{
+												<input type="checkbox" name="ids" value="@item.Id" onchange="highlight(this)" />
+											}
+										</td>
+
+										@{all = (all + item.InvoiceValue);}
+									</tr>
+
+								}
+
+							</tbody>
+						}
+
+
+
+
+
+					</table>
+
+					<div style="clear:both"></div>
+
+
+				</div>
+				<div>
+					<div style="float:right;text-align:right">
+						Wartość Faktur:
+						@Html.TextBox("all", @all, new { @disabled = "disabled" })
+					</div>
+					@if (Session["Read"].ToString() == "T")
+					{
+						if (Session["optionSADIS"].ToString() != "G")
+						{
+							<div style="float:left">
+								<input type="submit" value="Usuń Fakturę" style="float:left" class="btn btn-default" />
+							</div>
+						}
+					}
+
+				</div>
+			}
+		</div>

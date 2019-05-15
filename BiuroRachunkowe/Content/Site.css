@@ -16,6 +16,25 @@
     white-space: normal;
 }
 
+.table-borderless th,
+.table-borderless td,
+.table-borderless thead th,
+.table-borderless tbody + tbody {
+	border: 0;
+}
+tr.noBorder {
+	border: none;
+}
+
+td.noBorder {
+	border: none;
+	padding: 5px;
+	text-align: center;
+}
+
+.tableH {
+	border-collapse: collapse;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,

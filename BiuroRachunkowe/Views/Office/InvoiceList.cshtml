@@ -223,3 +223,18 @@
 
 </div>
 <div style="clear:both"></div>
+<script>
+
+	function ChangeBackgroundColor(row) {
+		row.style.backgroundColor = "#a4d4e6";
+	}
+
+	function RestoreBackgroundColor(row) {
+		if ($(row).attr('class') == "selected") {
+			row.style.backgroundColor = "#a4d4e6";
+		}
+		else {
+			row.style.backgroundColor = "#ffffff";
+		}
+	}
+</script>

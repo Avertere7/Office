@@ -7,6 +7,7 @@ namespace BiuroRachunkowe.Models
 	using System.ComponentModel.DataAnnotations;
 	using System.Web.Mvc;
 	using System.Collections.Generic;
+	using BiuroRachunkowe.Validation;
 
 	public partial class OfficeModel : DbContext
 	{
@@ -117,10 +118,6 @@ namespace BiuroRachunkowe.Models
 				.Property(e => e.ExchangeRate)
 				.HasPrecision(10, 6);
 
-			modelBuilder.Entity<SAD>()
-				.Property(e => e.SadStatus)
-				.IsFixedLength()
-				.IsUnicode(false);
 
 			modelBuilder.Entity<SAD>()
 				.Property(e => e.Paid)
@@ -468,6 +465,7 @@ namespace BiuroRachunkowe.Models
 		public long Id { get; set; }
 
 		[Required]
+		[SADNumberValidation]
 		[StringLength(25)]
 		[Display(Name = "Numer SADu")]
 		public string SadNumber { get; set; }
@@ -485,9 +483,7 @@ namespace BiuroRachunkowe.Models
 		[Display(Name = "Kurs")]
 		public decimal ExchangeRate { get; set; }
 
-		[StringLength(1)]
-		[Display(Name = "Status")]
-		public string SadStatus { get; set; }
+		
 
 		[StringLength(1)]
 		[Display(Name = "Zap³acono?")]
