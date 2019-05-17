@@ -36,7 +36,7 @@
 			<div class="col-sm-4 form-group">
 				@Html.LabelFor(model => model.Currency, htmlAttributes: new { @class = "control-label " })
 				<div>
-					@Html.DropDownListFor(model => model.Currency, new[] { new SelectListItem { Text = "PLN", Value = "ZŁ" }, new SelectListItem { Text = "USD", Value = "USD" }, new SelectListItem { Text = "EUR", Value = "EUR" } }, new { @class = "form-control" })
+					@Html.DropDownListFor(model => model.Currency, new[] { new SelectListItem { Text = "ZŁ", Value = "PLN" }, new SelectListItem { Text = "USD", Value = "USD" }, new SelectListItem { Text = "EUR", Value = "EUR" } }, new { @class = "form-control" })
 					@Html.ValidationMessageFor(model => model.Currency, "", new { @class = "text-danger" })
 				</div>
 			</div>
@@ -103,10 +103,14 @@
 
 
 	$("#Paid").on("change", function () {
-		if ($(this).val() == "T")
+		if ($(this).val() == "T") {
 			$("#PaidDate").prop("disabled", false);
-		else
+			$("#PaidDate").prop("required", true);
+		}
+		else {
 			$("#PaidDate").prop("disabled", true);
+			$("#PaidDate").prop("required", false);
+		}
 	});
 
 	$(function () {
