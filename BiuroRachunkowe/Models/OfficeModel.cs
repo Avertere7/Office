@@ -169,6 +169,7 @@ namespace BiuroRachunkowe.Models
 		public string InvoiceNumber { get; set; }
 
 		[Column(TypeName = "date")]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		[Display(Name = "Data Faktury")]
 		public DateTime InvoiceDate { get; set; }
 
@@ -226,6 +227,7 @@ namespace BiuroRachunkowe.Models
 		public string InvoiceNumber { get; set; }
 
 		[Column(TypeName = "date")]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		[Display(Name = "Data Faktury")]
 		public DateTime InvoiceDate { get; set; }
 
@@ -471,6 +473,7 @@ namespace BiuroRachunkowe.Models
 		public string SadNumber { get; set; }
 
 		[Column(TypeName = "date")]
+		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 		[Display(Name = "Data SADu")]
 		public DateTime SadDate { get; set; }
 

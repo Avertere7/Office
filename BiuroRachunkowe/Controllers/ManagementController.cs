@@ -61,7 +61,7 @@ namespace BiuroRachunkowe.Controllers
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> EditUser(UserEditViewModel model, string[] selectedRoles)
+		public ActionResult EditUser(UserEditViewModel model, string[] selectedRoles)
 		{
 			var uM = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
@@ -78,13 +78,9 @@ namespace BiuroRachunkowe.Controllers
 
 					
 
-					var roles = await uM.GetRolesAsync(model.Id);
-					await uM.RemoveFromRolesAsync(model.Id, roles.ToArray());
-					for (int i = 0; i < selectedRoles.Length; i++)
-					{
-						await uM.AddToRoleAsync(model.Id, selectedRoles[i]);
-					}
-					
+					var roles =  uM.GetRoles(model.Id).ToArray();
+					uM.RemoveFromRoles(model.Id, roles);
+					uM.AddToRoles(model.Id, selectedRoles);
 
 					return RedirectToAction("UserList");
 				}
