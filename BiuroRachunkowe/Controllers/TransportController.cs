@@ -17,9 +17,9 @@ namespace BiuroRachunkowe.Controllers
         // GET: Transport
         public ActionResult SADList( long? id, string sort,string SearchString)
         {
-			ViewBag.idd = sort == "F03002" ? "F03002 desc" : "F03002";
-			ViewBag.nr = sort == "F03003" ? "F03003 desc" : "F03003";
-			ViewBag.date = sort == "F03004" ? "F03004 desc" : "F03004";
+			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
+			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
+			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
 
 			List<SAD> all = SADSearch(id, SearchString, sort);
 			if (Session["SelectedIdIS"] != null)
@@ -120,9 +120,9 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult SADInvoice(long? id,string SearchString,string sort)
 		{
-			ViewBag.idd = sort == "F03002" ? "F03002 desc" : "F03002";
-			ViewBag.nr = sort == "F03003" ? "F03003 desc" : "F03003";
-			ViewBag.date = sort == "F03004" ? "F03004 desc" : "F03004";
+			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
+			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
+			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
 
 			List<SAD> all = SADSearch(id, SearchString, sort);
 			if (Session["SelectedIdIS"] != null)
@@ -179,22 +179,22 @@ namespace BiuroRachunkowe.Controllers
 
 			switch (sort)
 			{
-				case "F03002":
+				case "Id":
 					all = all.OrderBy(x => x.Id);
 					break;
-				case "F03003":
+				case "Nr":
 					all = all.OrderBy(x => x.SadNumber);
 					break;
-				case "F03003 desc":
+				case "Nr desc":
 					all = all.OrderByDescending(x => x.SadNumber);
 					break;
-				case "F03004":
+				case "Date":
 					all = all.OrderBy(x => x.SadDate);
 					break;
-				case "F03002 desc":
+				case "Id desc":
 					all = all.OrderByDescending(x => x.Id);
 					break;
-				case "F03004 desc":
+				case "Date desc":
 					all = all.OrderByDescending(x => x.SadDate);
 					break;
 				default:
