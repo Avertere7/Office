@@ -176,6 +176,7 @@ namespace BiuroRachunkowe.Controllers
 		}
 
 		// GET: Office/Create
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoiceCreate()
 		{
 			if (User.Identity.IsAuthenticated)
@@ -188,11 +189,10 @@ namespace BiuroRachunkowe.Controllers
 				return RedirectToAction("Login", "Account");
 		}
 
-		// POST: Office/Create
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoiceCreate(InvoiceHeaderViewModel invoiceHeaderView)
 		{
 			if (ModelState.IsValid)
@@ -206,7 +206,7 @@ namespace BiuroRachunkowe.Controllers
 			return View(invoiceHeaderView);
 		}
 
-		// GET: Office/Edit/5
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoiceEdit(long? id)
 		{
 			if (User.Identity.IsAuthenticated)
@@ -227,11 +227,10 @@ namespace BiuroRachunkowe.Controllers
 				return RedirectToAction("Login", "Account");
 		}
 
-		// POST: Office/Edit/5
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoiceEdit(InvoiceHeaderViewModel invoiceHeader)
 		{
 			if (ModelState.IsValid)
@@ -247,6 +246,7 @@ namespace BiuroRachunkowe.Controllers
 
 		[HttpPost, ActionName("InvoiceDelete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoiceDeleteConfirmed(long id)
 		{
 			InvoiceHeader invoiceHeader = db.InvoiceHeader.Find(id);
@@ -363,6 +363,8 @@ namespace BiuroRachunkowe.Controllers
 				return RedirectToAction("Login", "Account");
 		}
 
+
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoicePositionCreate(long id)
 		{
 			if (User.Identity.IsAuthenticated)
@@ -385,6 +387,7 @@ namespace BiuroRachunkowe.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoicePositionCreate(InvoicePositionViewModel invPVM)
 		{
 			if (ModelState.IsValid)
@@ -400,7 +403,7 @@ namespace BiuroRachunkowe.Controllers
 			return View(invPVM);
 		}
 
-
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoicePositionEdit(long? id)
 		{
 			if (User.Identity.IsAuthenticated)
@@ -424,6 +427,7 @@ namespace BiuroRachunkowe.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoicePositionEdit(InvoicePositionViewModel invoicePosition)
 		{
 			if (ModelState.IsValid)
@@ -456,6 +460,7 @@ namespace BiuroRachunkowe.Controllers
 		}
 		[HttpPost, ActionName("InvoicePositionDelete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult InvoicePositionDeleteConfirmed(long idpos)
 		{
 

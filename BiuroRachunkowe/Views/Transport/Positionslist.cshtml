@@ -103,7 +103,7 @@
 							<td>Wartość</td>
 							<td>Cło</td>
 							<td>
-								@if (ViewBag.Details != null && Session["SelectedPosIS"] != null)
+								@if (ViewBag.Details != null && Session["SelectedPosIS"] != null && !User.IsInRole("Intern"))
 								{
 
 
@@ -115,7 +115,7 @@
 								}
 								else
 								{
-									@Html.ActionLink("Edytuj", "PositionsEdit", new { id = Convert.ToInt32(Session["SelectedPosIS"]) }, new { @class = "btn btn-default",@disabled="disabled" })
+									@Html.ActionLink("Edytuj", "PositionsEdit", new { id = Convert.ToInt32(Session["SelectedPosIS"]) }, new { @class = "btn btn-default",@disabled="disabled" ,onclick="return false"})
 								}
 							</td>
 						</tr>

@@ -17,7 +17,16 @@
 			
 
 			<div style="float:right">
-				@Html.ActionLink("Stwórz", "InvoiceCreate", null, new { @class = "btn btn-default", @style = "padding:6px 12px" })
+				@if (User.IsInRole("Intern"))
+				{
+
+					@Html.ActionLink("Stwórz", "InvoiceCreate", null, new { @class = "btn btn-default", @style = "padding:6px 12px" ,@disabled="disabled",@onclick="return false;"})
+				}
+				else
+				{
+					@Html.ActionLink("Stwórz", "InvoiceCreate", null, new { @class = "btn btn-default", @style = "padding:6px 12px" })
+
+				}
 			</div>
 			<div style="clear:both"></div>
 		</div>
@@ -106,19 +115,39 @@
 
 		long idv = Convert.ToInt32(Session["PositionInvoice"]);
 
-	
-			
-				<div class="row" style="margin-bottom:3px;margin-right:0px;margin-left:0px">
-					@Html.ActionLink("Edytuj", "InvoiceEdit", new { id = idv }, new { @class = "btn btn-default col-sm-4" })
-					@Html.ActionLink("Pozycje", "ImportInvoicePos", new { id = idv }, new { @class = "btn btn-default col-sm-4" })
-					@using (@Html.BeginForm("InvoiceDelete", "Office", FormMethod.Post))
-					{
-						@Html.AntiForgeryToken()
-						@Html.Hidden("id", idv)
 
-						<input type="submit" value="Usuń" class="btn btn-default col-sm-4" onclick="return confirm('Czy na pewno chcesz usunąć tą fakturę')" />
-					}
-				</div>
+
+	<div class="row" style="margin-bottom:3px;margin-right:0px;margin-left:0px">
+
+		@if (User.IsInRole("Intern"))
+		{
+			@Html.ActionLink("Edytuj", "InvoiceEdit", new { id = idv }, new { @class = "btn btn-default col-sm-4", @disabled = "disabled",@onclick="return false;" })
+		}
+		else
+		{
+			@Html.ActionLink("Edytuj", "InvoiceEdit", new { id = idv }, new { @class = "btn btn-default col-sm-4" })
+
+		}
+		@Html.ActionLink("Pozycje", "ImportInvoicePos", new { id = idv }, new { @class = "btn btn-default col-sm-4" })
+		@using (@Html.BeginForm("InvoiceDelete", "Office", FormMethod.Post))
+		{
+			@Html.AntiForgeryToken()
+			@Html.Hidden("id", idv)
+
+			if (User.IsInRole("Intern"))
+			{
+
+				<input type="submit" value="Usuń" class="btn btn-default col-sm-4" disabled onclick="return false;" />
+			}
+
+			else
+			{
+				<input type="submit" value="Usuń" class="btn btn-default col-sm-4" onclick="return confirm('Czy na pewno chcesz usunąć tą fakturę')" />
+
+
+			}
+		}
+	</div>
 			
 
 

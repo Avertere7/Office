@@ -122,8 +122,8 @@
 
 
 
-							
-								<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>Wartość</td><td>Typ</td><td>Dostawca</td></tr>
+
+							<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>Wartość</td><td>Typ</td><td>Dostawca</td></tr>
 							<tbody>
 								@foreach (var item in (ViewBag.InvoiceToAdd as List<BiuroRachunkowe.Models.InvoiceHeader>))
 								{
@@ -159,8 +159,14 @@
 				if (ViewBag.InvoiceToAdd != null)
 				{
 
-
-					<input type="submit" value="Dodaj Fakturę" class="btn btn-default" />
+					if (User.IsInRole("Intern"))
+					{
+						<input type="submit" value="Dodaj Fakturę" class="btn btn-default" disabled onclick="return false;"/>
+					}
+					else
+					{
+						<input type="submit" value="Dodaj Fakturę" class="btn btn-default" />
+					}
 
 				}
 
@@ -175,7 +181,7 @@
 
 						@if (ViewBag.InvoiceToDelete != null)
 						{
-								<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>Wartość</td><td>Typ</td><td>Dostawca</td></tr>
+							<tr><td>ID</td><td>Numer</td><td>Waluta</td><td>Data</td><td>Wartość</td><td>Typ</td><td>Dostawca</td></tr>
 
 							<tbody>
 								@foreach (var item in (ViewBag.InvoiceToDelete as List<BiuroRachunkowe.Models.InvoiceHeader>))
@@ -221,7 +227,14 @@
 					</div>
 
 					<div style="float:left">
-						<input type="submit" value="Usuń Fakturę" style="float:left" class="btn btn-default" />
+						@if (User.IsInRole("Intern"))
+						{
+							<input type="submit" value="Usuń Fakturę" style="float:left" class="btn btn-default" disabled onclick="return false"/>
+						}
+						else
+						{
+							<input type="submit" value="Usuń Fakturę" style="float:left" class="btn btn-default" />
+						}
 					</div>
 
 

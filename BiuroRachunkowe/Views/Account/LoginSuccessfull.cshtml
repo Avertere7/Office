@@ -14,7 +14,7 @@
 </div>
 <div class="row">
 	<div class="col-sm-12">
-		@if (User.IsInRole("Admin") || User.IsInRole("User"))
+		@if (User.IsInRole("Admin"))
 		{
 			<p>@Html.ActionLink("Administracja", "UserList", "Management",null, new { @class = "btn btn-default btn-lg btn-block" })</p>
 		}

@@ -18,24 +18,33 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Transport
 		public ActionResult SADList(long? id, string sort, string SearchString)
 		{
-			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
-			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
-			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
+			if (User.Identity.IsAuthenticated)
+			{
+				ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
+				ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
+				ViewBag.date = sort == "Date" ? "Date desc" : "Date";
 
-			List<SAD> all = SADSearch(id, SearchString, sort);
-			if (Session["SelectedIdIS"] != null)
-				id = Convert.ToInt32(Session["SelectedIdIS"]);
-			if (all.Any())
-				ViewBag.Details = db.SAD.Where(x => x.Id == id).ToList();
+				List<SAD> all = SADSearch(id, SearchString, sort);
+				if (Session["SelectedIdIS"] != null)
+					id = Convert.ToInt32(Session["SelectedIdIS"]);
+				if (all.Any())
+					ViewBag.Details = db.SAD.Where(x => x.Id == id).ToList();
 
 
 
-			return View(all.ToList());
+				return View(all.ToList());
+			}
+			else
+				return RedirectToAction("Login", "Account");
+
+
 		}
 
 		// GET: Transport/Details/5
 		public ActionResult SADDetails(long? id)
 		{
+			if(User.Identity.IsAuthenticated)
+			{
 			if (id == null)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -46,17 +55,23 @@ namespace BiuroRachunkowe.Controllers
 				return HttpNotFound();
 			}
 			return View(sAD);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
-		// GET: Transport/Create
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult SADCreate()
 		{
-			return View();
+			if (User.Identity.IsAuthenticated)
+			{
+				return View();
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
-		// POST: Transport/Create
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+		[Authorize(Roles = "User,Admin")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult SADCreate([Bind(Include = "Id,SadNumber,SadDate,Currency,ExchangeRate,SadStatus,Paid,PaidDate,Remarks")] SAD sAD)
@@ -73,9 +88,11 @@ namespace BiuroRachunkowe.Controllers
 			return View(sAD);
 		}
 
-		// GET: Transport/Edit/5
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult SADEdit(long? id)
 		{
+			if(User.Identity.IsAuthenticated)
+			{
 			if (id == null)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -86,12 +103,14 @@ namespace BiuroRachunkowe.Controllers
 				return HttpNotFound();
 			}
 			return View(sAD);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
-		// POST: Transport/Edit/5
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+		
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		[ValidateAntiForgeryToken]
 		public ActionResult SADEdit([Bind(Include = "Id,SadNumber,SadDate,Currency,ExchangeRate,SadStatus,Paid,PaidDate,Remarks")] SAD sAD)
 		{
@@ -108,8 +127,9 @@ namespace BiuroRachunkowe.Controllers
 
 
 
-		// POST: Transport/Delete/5
+		
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		[ValidateAntiForgeryToken]
 		public ActionResult SADDelete(long id)
 		{
@@ -121,6 +141,8 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult SADInvoice(long? id, string SearchString, string sort)
 		{
+			if(User.Identity.IsAuthenticated)
+			{
 			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
 			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
 			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
@@ -138,6 +160,9 @@ namespace BiuroRachunkowe.Controllers
 
 
 			return View(all.ToList());
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 		public List<InvoiceHeader> GetInvoiceToAdd(string curr)
@@ -299,6 +324,7 @@ namespace BiuroRachunkowe.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult AddInvoice(long[] ids)
 		{
 			using (var office = new OfficeModel())
@@ -451,6 +477,7 @@ namespace BiuroRachunkowe.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult DeleteInvoice(long[] ids)
 		{
 
@@ -464,7 +491,6 @@ namespace BiuroRachunkowe.Controllers
 						long sadID = Convert.ToInt32(Session["SelectedIdIS"]);
 						var sad = office.SAD.FirstOrDefault(x => x.Id == sadID);
 						var positions = office.SadPositions.Where(x => x.IdSad == sadID);
-						string message = "";
 						foreach (var id in ids)
 						{
 							List<SAD_Invoice> polList = office.SAD_Invoice.Where(x => x.ID_INV == id).ToList();
@@ -548,6 +574,8 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult Positionslist(long? id, string sort, string SearchString, long? idpos)
 		{
+			if(User.Identity.IsAuthenticated)
+			{
 			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
 			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
 			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
@@ -572,11 +600,17 @@ namespace BiuroRachunkowe.Controllers
 				}
 			}
 			return View(all);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 
 		}
 
+		[Authorize(Roles = "User,Admin")]
 		public ActionResult PositionsEdit(long? id)
 		{
+			if(User.Identity.IsAuthenticated)
+			{
 			if (id == null)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -606,10 +640,14 @@ namespace BiuroRachunkowe.Controllers
 				return HttpNotFound();
 			}
 			return View(position);
+			}
+			else
+				return RedirectToAction("Login", "Account");
 		}
 
 
 		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
 		[ValidateAntiForgeryToken]
 		public ActionResult PositionsEdit(SadPositions position)
 		{

@@ -196,24 +196,31 @@
 		<div style="text-align:center;margin-left:8%;margin-right:8%;">
 			
 			<div class="col-sm-3">
-				@if (Session["InvoicePositionSelected"] != null)
+				@if (Session["InvoicePositionSelected"] != null && !User.IsInRole("Intern"))
 				{
 					@Html.ActionLink("Edytuj", "InvoicePositionEdit", new { id = Convert.ToInt32(Session["InvoicePositionSelected"]) }, new { @class = "btn btn-default" })
 				}
 				else
 				{
-					@Html.ActionLink("Edytuj", "InvoicePositionEdit", new { id = Convert.ToInt32(Session["InvoicePositionSelected"]) }, new { @class = "btn btn-default", @disabled = "disabled" })
+					@Html.ActionLink("Edytuj", "InvoicePositionEdit", new { id = Convert.ToInt32(Session["InvoicePositionSelected"]) }, new { @class = "btn btn-default", @disabled = "disabled",onclick="return false" })
 				}
 			</div>
 			<div class="col-sm-3">
 
-				
-					@Html.ActionLink("Stwórz", "InvoicePositionCreate",new {id=det.Id }, new { @class = "btn btn-default" })
+				@if (User.IsInRole("Intern"))
+				{
+					@Html.ActionLink("Stwórz", "InvoicePositionCreate", new { id = det.Id }, new { @class = "btn btn-default" ,@disabled="disabled",onclick="return false"})
+				}
+				else
+				{
+					@Html.ActionLink("Stwórz", "InvoicePositionCreate", new { id = det.Id }, new { @class = "btn btn-default" })
 
-				
+				}
+
+
 			</div>
 			<div class="col-sm-3">
-				@if (Session["InvoicePositionSelected"] != null)
+				@if (Session["InvoicePositionSelected"] != null && !User.IsInRole("Intern"))
 				{
 					using (Html.BeginForm("InvoicePositionDelete", "Office", FormMethod.Post))
 					{
@@ -225,7 +232,7 @@
 				}
 				else
 				{
-					<input type="submit" value="Usuń" class="btn btn-default" disabled onclick="return confirm('Czy na pewno chcesz usunąć tą pozycje?')" />
+					<input type="submit" value="Usuń" class="btn btn-default" disabled onclick="return false;" />
 				}
 			</div>
 			<div class="col-sm-3">
