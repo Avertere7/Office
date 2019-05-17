@@ -43,18 +43,18 @@ namespace BiuroRachunkowe.Controllers
 		// GET: Transport/Details/5
 		public ActionResult SADDetails(long? id)
 		{
-			if(User.Identity.IsAuthenticated)
+			if (User.Identity.IsAuthenticated)
 			{
-			if (id == null)
-			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			}
-			SAD sAD = db.SAD.Find(id);
-			if (sAD == null)
-			{
-				return HttpNotFound();
-			}
-			return View(sAD);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				SAD sAD = db.SAD.Find(id);
+				if (sAD == null)
+				{
+					return HttpNotFound();
+				}
+				return View(sAD);
 			}
 			else
 				return RedirectToAction("Login", "Account");
@@ -91,24 +91,24 @@ namespace BiuroRachunkowe.Controllers
 		[Authorize(Roles = "User,Admin")]
 		public ActionResult SADEdit(long? id)
 		{
-			if(User.Identity.IsAuthenticated)
+			if (User.Identity.IsAuthenticated)
 			{
-			if (id == null)
-			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			}
-			SAD sAD = db.SAD.Find(id);
-			if (sAD == null)
-			{
-				return HttpNotFound();
-			}
-			return View(sAD);
+				if (id == null)
+				{
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+				}
+				SAD sAD = db.SAD.Find(id);
+				if (sAD == null)
+				{
+					return HttpNotFound();
+				}
+				return View(sAD);
 			}
 			else
 				return RedirectToAction("Login", "Account");
 		}
 
-		
+
 		[HttpPost]
 		[Authorize(Roles = "User,Admin")]
 		[ValidateAntiForgeryToken]
@@ -127,7 +127,7 @@ namespace BiuroRachunkowe.Controllers
 
 
 
-		
+
 		[HttpPost]
 		[Authorize(Roles = "User,Admin")]
 		[ValidateAntiForgeryToken]
@@ -141,25 +141,25 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult SADInvoice(long? id, string SearchString, string sort)
 		{
-			if(User.Identity.IsAuthenticated)
+			if (User.Identity.IsAuthenticated)
 			{
-			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
-			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
-			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
+				ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
+				ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
+				ViewBag.date = sort == "Date" ? "Date desc" : "Date";
 
-			List<SAD> all = SADSearch(id, SearchString, sort);
-			if (Session["SelectedIdIS"] != null)
-				id = Convert.ToInt32(Session["SelectedIdIS"]);
-			if (all.Any())
-			{
-				SAD sad = db.SAD.FirstOrDefault(x => x.Id == id);
-				ViewBag.InvoiceToAdd = GetInvoiceToAdd(sad.Currency);
-				ViewBag.InvoiceToDelete = GetInvoiceToDelete(sad.Id);
+				List<SAD> all = SADSearch(id, SearchString, sort);
+				if (Session["SelectedIdIS"] != null)
+					id = Convert.ToInt32(Session["SelectedIdIS"]);
+				if (all.Any())
+				{
+					SAD sad = db.SAD.FirstOrDefault(x => x.Id == id);
+					ViewBag.InvoiceToAdd = GetInvoiceToAdd(sad.Currency);
+					ViewBag.InvoiceToDelete = GetInvoiceToDelete(sad.Id);
 
-			}
+				}
 
 
-			return View(all.ToList());
+				return View(all.ToList());
 			}
 			else
 				return RedirectToAction("Login", "Account");
@@ -574,32 +574,32 @@ namespace BiuroRachunkowe.Controllers
 
 		public ActionResult Positionslist(long? id, string sort, string SearchString, long? idpos)
 		{
-			if(User.Identity.IsAuthenticated)
+			if (User.Identity.IsAuthenticated)
 			{
-			ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
-			ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
-			ViewBag.date = sort == "Date" ? "Date desc" : "Date";
+				ViewBag.idd = sort == "Id" ? "Id desc" : "Id";
+				ViewBag.nr = sort == "Nr" ? "Nr desc" : "Nr";
+				ViewBag.date = sort == "Date" ? "Date desc" : "Date";
 
-			List<SAD> all = SADSearch(id, SearchString, sort);
-			if (Session["SelectedIdIS"] != null)
-				id = Convert.ToInt32(Session["SelectedIdIS"]);
-			if (all.Any())
-			{
-				ViewBag.Details = db.SadPositions.Where(x => x.IdSad == id).OrderBy(x => x.Id).ToList();
-				if (!idpos.HasValue)
+				List<SAD> all = SADSearch(id, SearchString, sort);
+				if (Session["SelectedIdIS"] != null)
+					id = Convert.ToInt32(Session["SelectedIdIS"]);
+				if (all.Any())
 				{
-					if (Session["SelectedPosIS"] != null)
+					ViewBag.Details = db.SadPositions.Where(x => x.IdSad == id).OrderBy(x => x.Id).ToList();
+					if (!idpos.HasValue)
 					{
-						idpos = Convert.ToInt32(Session["SelectedPosIS"]);
+						if (Session["SelectedPosIS"] != null)
+						{
+							idpos = Convert.ToInt32(Session["SelectedPosIS"]);
+						}
+					}
+					if (idpos.HasValue)
+					{
+						Session["SelectedPosIS"] = idpos;
+						ViewBag.Details2 = db.SadPositions.Where(x => x.Id == idpos).ToList();
 					}
 				}
-				if (idpos.HasValue)
-				{
-					Session["SelectedPosIS"] = idpos;
-					ViewBag.Details2 = db.SadPositions.Where(x => x.Id == idpos).ToList();
-				}
-			}
-			return View(all);
+				return View(all);
 			}
 			else
 				return RedirectToAction("Login", "Account");
@@ -609,56 +609,11 @@ namespace BiuroRachunkowe.Controllers
 		[Authorize(Roles = "User,Admin")]
 		public ActionResult PositionsEdit(long? id)
 		{
-			if(User.Identity.IsAuthenticated)
+			if (User.Identity.IsAuthenticated)
 			{
-			if (id == null)
-			{
-				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-			}
-			List<SelectListItem> CountryOfOrigin = new List<SelectListItem>()
-			{
-				new SelectListItem {Value="PL",Text="Polska" },
-				new SelectListItem {Value="DE",Text="Niemcy" },
-				new SelectListItem {Value="US",Text="USA" },
-			};
-
-			ViewBag.COODDL = new SelectList(CountryOfOrigin, "Value", "Text");
-
-			List<SelectListItem> HSCode = new List<SelectListItem>()
-			{
-				new SelectListItem {Value="123",Text="Śrubka" },
-				new SelectListItem {Value="343",Text="Układ Scalony" },
-				new SelectListItem {Value="536",Text="Drut" },
-			};
-
-			ViewBag.HSDDL = new SelectList(HSCode, "Value", "Text");
-
-
-			SadPositions position = db.SadPositions.Find(id);
-			if (position == null)
-			{
-				return HttpNotFound();
-			}
-			return View(position);
-			}
-			else
-				return RedirectToAction("Login", "Account");
-		}
-
-
-		[HttpPost]
-		[Authorize(Roles = "User,Admin")]
-		[ValidateAntiForgeryToken]
-		public ActionResult PositionsEdit(SadPositions position)
-		{
-			if (Session["UserId"] != null)
-			{
-				if (ModelState.IsValid)
+				if (id == null)
 				{
-					position.Rate /= 100;
-					db.Entry(position).State = EntityState.Modified;
-					db.SaveChanges();
-					return RedirectToAction("Positionslist", new { id = position.IdSad, idpos = position.Id });
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				}
 				List<SelectListItem> CountryOfOrigin = new List<SelectListItem>()
 			{
@@ -677,10 +632,52 @@ namespace BiuroRachunkowe.Controllers
 			};
 
 				ViewBag.HSDDL = new SelectList(HSCode, "Value", "Text");
+
+
+				SadPositions position = db.SadPositions.Find(id);
+				if (position == null)
+				{
+					return HttpNotFound();
+				}
 				return View(position);
 			}
 			else
-				return RedirectToAction("Login", "Security");
+				return RedirectToAction("Login", "Account");
+		}
+
+
+		[HttpPost]
+		[Authorize(Roles = "User,Admin")]
+		[ValidateAntiForgeryToken]
+		public ActionResult PositionsEdit(SadPositions position)
+		{
+
+			if (ModelState.IsValid)
+			{
+				position.Rate /= 100;
+				db.Entry(position).State = EntityState.Modified;
+				db.SaveChanges();
+				return RedirectToAction("Positionslist", new { id = position.IdSad, idpos = position.Id });
+			}
+			List<SelectListItem> CountryOfOrigin = new List<SelectListItem>()
+			{
+				new SelectListItem {Value="PL",Text="Polska" },
+				new SelectListItem {Value="DE",Text="Niemcy" },
+				new SelectListItem {Value="US",Text="USA" },
+			};
+
+			ViewBag.COODDL = new SelectList(CountryOfOrigin, "Value", "Text");
+
+			List<SelectListItem> HSCode = new List<SelectListItem>()
+			{
+				new SelectListItem {Value="123",Text="Śrubka" },
+				new SelectListItem {Value="343",Text="Układ Scalony" },
+				new SelectListItem {Value="536",Text="Drut" },
+			};
+
+			ViewBag.HSDDL = new SelectList(HSCode, "Value", "Text");
+			return View(position);
+
 		}
 
 		protected override void Dispose(bool disposing)

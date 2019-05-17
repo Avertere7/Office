@@ -1,6 +1,8 @@
 ﻿@model BiuroRachunkowe.Models.InvoiceHeaderViewModel
 
-
+<script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
+<link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
 
 <h2>Edytuj fakturę numer:@Model.InvoiceNumber</h2>
 
@@ -129,7 +131,7 @@
 }
 
 <div>
-	@Html.ActionLink("Wróć", "InvoiceList",null, new { @class = "btn btn-default " })
+	@Html.ActionLink("Wróć", "InvoiceList", null, new { @class = "btn btn-default " })
 </div>
 
 @section Scripts {
@@ -137,9 +139,30 @@
 }
 <script type="text/javascript">
 	$(function () {
-		var $j = jQuery.noConflict();
-		$j('.date-picker').datepicker({
+		$('.date-picker').datepicker({
 			dateFormat: 'yy-mm-dd'
 		});
+	});
+
+	$("#Currency").on("change", function () {
+		let curr = $("#Currency").val();
+		if (curr == "PLN")
+			$("#ExchangeRate").val(1.00);
+		else if (curr == "EUR")
+			$("#ExchangeRate").val(4.30);
+		else if (curr == "USD")
+			$("#ExchangeRate").val(3.85);
+
+	});
+
+
+	$(document).ready(function () {
+		let curr = $("#Currency").val();
+		if (curr == "PLN")
+			$("#ExchangeRate").val(1.00);
+		else if (curr == "EUR")
+			$("#ExchangeRate").val(4.30);
+		else if (curr == "USD")
+			$("#ExchangeRate").val(3.85);
 	});
 </script>

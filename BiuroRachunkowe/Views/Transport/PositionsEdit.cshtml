@@ -17,7 +17,7 @@
 			<div class="form-group col-sm-4">
 				@Html.LabelFor(model => model.HSCode, htmlAttributes: new { @class = "control-label " })
 
-				@Html.DropDownListFor(model => model.HSCode,(SelectList)ViewBag.HSDDL, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.DropDownListFor(model => model.HSCode,(SelectList)ViewBag.HSDDL,  new { @class = "form-control" } )
 				@Html.ValidationMessageFor(model => model.HSCode, "", new { @class = "text-danger" })
 
 			</div>
@@ -25,7 +25,7 @@
 			<div class="form-group col-sm-4">
 				@Html.LabelFor(model => model.CountryOfOrigin, htmlAttributes: new { @class = "control-label " })
 
-				@Html.DropDownListFor(model => model.CountryOfOrigin,(SelectList)ViewBag.COODDL ,new { htmlAttributes = new { @class = "form-control" } })
+				@Html.DropDownListFor(model => model.CountryOfOrigin,(SelectList)ViewBag.COODDL , new { @class = "form-control" } )
 				@Html.ValidationMessageFor(model => model.CountryOfOrigin, "", new { @class = "text-danger" })
 
 			</div>
@@ -35,7 +35,7 @@
 		<div class="row" style="margin-left:10px">
 			<div class="form-group col-sm-4">
 				@Html.Label("Stawka cła[%]", htmlAttributes: new { @class = "control-label " })
-				@Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control" } })
+				@Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control",@Value=(Model.Rate* 100).ToString("#0.##") } })
 				@Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
 			</div>
 

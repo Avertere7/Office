@@ -90,6 +90,15 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+
+		let curr = $("#Currency").val();
+		if (curr == "PLN")
+			$("#ExchangeRate").val(1.00);
+		else if (curr == "EUR")
+			$("#ExchangeRate").val(4.30);
+		else if (curr == "USD")
+			$("#ExchangeRate").val(3.85);
+
 		if ($("#Paid").val() == "T")
 			$("#PaidDate").prop("disabled", false);
 		else
@@ -119,4 +128,14 @@
 		});
 	});
 
+	$("#Currency").on("change", function () {
+		let curr = $("#Currency").val();
+		if (curr == "PLN")
+			$("#ExchangeRate").val(1.00);
+		else if (curr == "EUR")
+			$("#ExchangeRate").val(4.30);
+		else if (curr == "USD")
+			$("#ExchangeRate").val(3.85);
+
+	});
 </script>
