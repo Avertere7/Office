@@ -367,6 +367,17 @@ namespace BiuroRachunkowe.Controllers
 													SADposition.DutyValue = 0;
 												else
 													SADposition.DutyValue = Math.Round(SADposition.PositionValue.Value * SADposition.Rate);//to oblicz wart celna na dstwaie stawki i wyliczonej wartosci pozycji
+												if (!office.SAD_Invoice.Any(x => x.ID_SAD == sad.Id && x.ID_SAD_POS == SADposition.Id && x.ID_INV == position.InvoiceId && x.ID_INV_POS == position.Id))
+												{
+													SAD_Invoice pol = new SAD_Invoice();
+													pol.ID_SAD = sad.Id;
+													pol.ID_SAD_POS = SADposition.Id;
+													pol.ID_INV = position.InvoiceId;
+													pol.ID_INV_POS = position.Id;
+													office.SAD_Invoice.Add(pol);
+													office.SaveChanges();
+
+												}
 
 											}
 											else//dodaj nowa pozycje jeesli nie znaleziono

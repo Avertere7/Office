@@ -72,3 +72,37 @@ textarea {
 .odd {
 	background-color: #ffffff;
 }
+
+
+/* navbar changes*/
+
+
+.navbar-inverse {
+	background-color:  #a4d4e6 !important;
+}
+
+.navbar-brand {
+	color: black !important
+}
+
+	.navbar-brand:visited {
+		color: black !important
+	}
+
+.navbar-default-color {
+	color: black !important
+}
+
+
+.navbar-brand:hover {
+	color: white !important
+}
+.linkInNavbar:visited {
+	color: black !important
+}
+.linkInNavbar:hover {
+	color:white !important
+}
+.linkInNavbar {
+	color: black !important
+}

@@ -23,12 +23,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Biuro Rachunkowe", "Login", "Account", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Biuro Rachunkowe", "Login", "Account", new { area = "" }, new { @class = "navbar-brand"  })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Faktury", "InvoiceList", "Office")</li>
-                    <li>@Html.ActionLink("SADy", "SADList", "Transport")</li>
+                    <li>@Html.ActionLink("Faktury", "InvoiceList", "Office",null,new {@class="linkInNavbar" })</li>
+                    <li>@Html.ActionLink("SADy", "SADList", "Transport", null, new { @class = "linkInNavbar" })</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

@@ -200,7 +200,7 @@ namespace BiuroRachunkowe.Controllers
 				InvoiceHeader newIH = FromViewToModelHeader(invoiceHeaderView);
 				db.InvoiceHeader.Add(newIH);
 				db.SaveChanges();
-				return RedirectToAction("InvoiceList");
+				return RedirectToAction("InvoiceList",null,new { id = newIH.Id });
 			}
 
 			return View(invoiceHeaderView);
