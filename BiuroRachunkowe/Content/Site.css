@@ -41,9 +41,7 @@ select,
 textarea {
     max-width: 280px;
 }
-.selected {
-	bac
-}
+
 .selected {
 	background-color: #a4d4e6;
 }
@@ -61,7 +59,16 @@ textarea {
 	display: block;
 }
 
-	.table-fixed tbody td, .table-fixed thead > tr > th {
+.table-fixed tbody td, .table-fixed thead > tr > th {
 		float: left;
 		border-bottom-width: 0;
 	}
+
+
+.even {
+	background-color: #f9f9f9;
+}
+
+.odd {
+	background-color: #ffffff;
+}
